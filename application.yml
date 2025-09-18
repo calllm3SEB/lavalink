@@ -1,0 +1,148 @@
+server: # REST and WS server
+  port: 7777
+  address: 0.0.0.0
+  http2:
+    enabled: true # Whether to enable HTTP/2 support
+
+lavalink:
+  plugins:
+    - dependency: "dev.lavalink.youtube:youtube-plugin:1.11.2"
+      repository: https://maven.lavalink.dev/releases
+  server:
+    password: "dsc.gg/vampCLICK"
+    sources:
+      # The default Youtube source is now deprecated and won't receive further updates. Please use https://github.com/lavalink-devs/youtube-source#plugin instead.
+      youtube: false
+      bandcamp: true
+      soundcloud: true
+      twitch: true
+      vimeo: true
+      nico: true
+      http: true # warning: keeping HTTP enabled without a proxy configured could expose your server's IP address.
+      local: false
+    filters: # All filters are enabled by default
+      volume: true
+      equalizer: true
+      karaoke: true
+      timescale: true
+      tremolo: true
+      vibrato: true
+      distortion: true
+      rotation: true
+      channelMix: true
+      lowPass: true
+    nonAllocatingFrameBuffer: false # Setting to true reduces the number of allocations made by each player at the expense of frame rebuilding (e.g. non-instantaneous volume changes)
+    bufferDurationMs: 400 # The duration of the NAS buffer. Higher values fare better against longer GC pauses. Duration <= 0 to disable JDA-NAS. Minimum of 40ms, lower values may introduce pauses.
+    frameBufferDurationMs: 5000 # How many milliseconds of audio to keep buffered
+    opusEncodingQuality: 10 # Opus encoder quality. Valid values range from 0 to 10, where 10 is best quality but is the most expensive on the CPU.
+    resamplingQuality: LOW # Quality of resampling operations. Valid values are LOW, MEDIUM and HIGH, where HIGH uses the most CPU.
+    trackStuckThresholdMs: 10000 # The threshold for how long a track can be stuck. A track is stuck if does not return any audio data.
+    useSeekGhosting: true # Seek ghosting is the effect where whilst a seek is in progress, the audio buffer is read from until empty, or until seek is ready.
+    youtubePlaylistLoadLimit: 6 # Number of pages at 100 each
+    playerUpdateInterval: 5 # How frequently to send player updates to clients, in seconds
+    youtubeSearchEnabled: true
+    soundcloudSearchEnabled: true
+    gc-warnings: true
+
+plugins:
+  youtube:
+    allowDirectPlaylistIds: true
+    allowDirectVideoIds: true
+    allowSearch: true
+    enabled: true
+    oauth:
+      enabled: false
+
+    clients:
+      - MUSIC
+      - WEB
+      - WEBEMBEDDED
+      - MWEB
+      - TV
+      - TVHTML5EMBEDDED
+      - ANDROID_MUSIC
+      - ANDROID_VR
+      - IOS
+      - ANDROID
+
+    clientOptions:
+      MUSIC:
+        playback: false
+        playlistLoading: false
+        videoLoading: true
+        searching: true
+      MWEB:
+        playback: true
+        playlistLoading: true
+        videoLoading: true
+        searching: false
+      WEB:
+        playback: true
+        playlistLoading: true
+        videoLoading: true
+        searching: true
+      WEBEMBEDDED:
+        playback: true
+        playlistLoading: false
+        videoLoading: false
+        searching: false
+      TV:
+        playback: true
+        playlistLoading: false
+        videoLoading: false
+        searching: false
+      TVHTML5EMBEDDED:
+        playback: true
+        playlistLoading: false
+        videoLoading: true
+        searching: true
+      ANDROID_MUSIC:
+        playback: true
+        playlistLoading: false
+        videoLoading: true
+        searching: true
+      ANDROID_VR:
+        playback: true
+        playlistLoading: true
+        videoLoading: true
+        searching: true
+      IOS:
+        playback: false
+        playlistLoading: true
+        videoLoading: true
+        searching: true
+      ANDROID:
+        playback: true
+        playlistLoading: true
+        videoLoading: true
+        searching: true
+
+metrics:
+  prometheus:
+    enabled: false
+    endpoint: /metrics
+
+sentry:
+  dsn: ""
+  environment: ""
+
+logging:
+  file:
+    path: ./logs/
+
+  level:
+    root: INFO
+    lavalink: INFO
+
+  request:
+    enabled: true
+    includeClientInfo: true
+    includeHeaders: false
+    includeQueryString: true
+    includePayload: true
+    maxPayloadLength: 10000
+
+  logback:
+    rollingpolicy:
+      max-file-size: 1GB
+      max-history: 30
